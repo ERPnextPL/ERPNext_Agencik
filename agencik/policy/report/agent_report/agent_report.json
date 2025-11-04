@@ -1,0 +1,29 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2025-10-09 15:35:51.640306",
+ "disabled": 1,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "json": "{}",
+ "letterhead": null,
+ "modified": "2025-10-14 10:11:35.671797",
+ "modified_by": "Administrator",
+ "module": "Policy",
+ "name": "Agent Report",
+ "owner": "jan@erptech.com",
+ "prepared_report": 0,
+ "ref_doctype": "Insurance Policy",
+ "report_name": "Agent Report",
+ "report_type": "Report Builder",
+ "roles": [
+  {
+   "role": "Customer"
+  }
+ ],
+ "timeout": 0
+}

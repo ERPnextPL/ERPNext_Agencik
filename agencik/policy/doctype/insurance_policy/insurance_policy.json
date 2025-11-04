@@ -6,8 +6,6 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "send_tab",
-  "policy_fille",
   "details_tab",
   "section_break_oput",
   "type_policy",
@@ -15,13 +13,14 @@
   "insurance_company",
   "coverage_start",
   "coverage_end",
-  "premium",
+  "premium_amount",
   "reminder",
   "client",
   "user",
   "transport_section",
   "vehicle",
-  "insurancee_components",
+  "brand",
+  "insurance_components",
   "insurance_value",
   "commission_vehicle",
   "calculate_your_commission",
@@ -30,7 +29,10 @@
   "commission",
   "insurance_premium",
   "notes",
-  "komunikacyjna_tab"
+  "send_tab",
+  "policy_fille",
+  "komunikacyjna_tab",
+  "amended_from"
  ],
  "fields": [
   {
@@ -58,11 +60,6 @@
    "fieldname": "coverage_end",
    "fieldtype": "Date",
    "label": "Coverage end"
-  },
-  {
-   "fieldname": "premium",
-   "fieldtype": "Currency",
-   "label": "Premium"
   },
   {
    "default": "none",
@@ -154,14 +151,6 @@
    "label": "Calculate your commission"
   },
   {
-   "depends_on": "eval:doc.type_policy == \"Transport\";",
-   "fieldname": "insurancee_components",
-   "fieldtype": "Table MultiSelect",
-   "label": "Insurancee components",
-   "options": "Insurance Module",
-   "sort_options": 1
-  },
-  {
    "fieldname": "komunikacyjna_tab",
    "fieldtype": "Tab Break",
    "label": "komunikacyjna"
@@ -186,12 +175,43 @@
    "fieldtype": "Link",
    "label": "User",
    "options": "User"
+  },
+  {
+   "fetch_from": "vehicle.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand",
+   "read_only": 1
+  },
+  {
+   "fieldname": "premium_amount",
+   "fieldtype": "Currency",
+   "label": "Premium"
+  },
+  {
+   "depends_on": "eval:doc.type_policy == \"Transport\";",
+   "fieldname": "insurance_components",
+   "fieldtype": "Table MultiSelect",
+   "label": "Insurance components",
+   "options": "Insurance Module",
+   "sort_options": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Insurance Policy",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2025-10-13 09:38:57.982660",
+ "modified": "2025-10-30 15:13:34.170219",
  "modified_by": "Administrator",
  "module": "Policy",
  "name": "Insurance Policy",
@@ -211,6 +231,7 @@
    "write": 1
   }
  ],
+ "protect_attached_files": 1,
  "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
