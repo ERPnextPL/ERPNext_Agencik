@@ -18,8 +18,8 @@ def process_policy_file(docname):
         result = process_policy_file_internal(doc)
         return result
     except Exception as e:
-        frappe.log_error(str(e), "OCR Error (process_policy_file)")
-        return {"error": str(e)}
+        frappe.log_error(f"OCR Error (process_policy_file): {e!s}")
+        return {f"error: {e!s}"}
 
 
 @frappe.whitelist()
@@ -62,8 +62,8 @@ def process_policy_temp(data):
         return {"success": True, "data": extracted_data}
 
     except Exception as e:
-        frappe.log_error(str(e), "TEMP OCR Error")
-        return {"error": str(e)}
+        frappe.log_error(f"TEMP OCR Error: {e!s}")
+        return {f"error: {e!s}"}
 
 
 def process_policy_file_internal(doc):
@@ -99,8 +99,8 @@ def process_policy_file_internal(doc):
         return {"success": True, "data": extracted_data}
 
     except Exception as e:
-        frappe.log_error(str(e), "OCR Processing Error")
-        return {"error": str(e)}
+        frappe.log_error(f"OCR Processing Error: {e!s}")
+        return {f"error: {e!s}"}
 
 
 # ===============================================================
@@ -282,7 +282,7 @@ def ensure_client_exists(name):
         frappe.log_error(f"✅ Utworzono klienta (Customer): {name}", "OCR ensure_client_exists")
         return new_customer.name
     except Exception as e:
-        frappe.log_error(f"❌ Błąd przy tworzeniu klienta '{name}': {str(e)}", "OCR ensure_client_exists")
+        frappe.log_error(f"❌ Błąd przy tworzeniu klienta '{name}': {e!s}", "OCR ensure_client_exists")
         return None
 
         # """Ulepszone odczytywanie tekstu z regionów dokumentu z powiększeniem."""
