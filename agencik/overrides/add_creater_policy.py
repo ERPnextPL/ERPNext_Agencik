@@ -43,6 +43,6 @@ def set_current_user(doc, method=None):
             doc.user = frappe.session.user
             frappe.log_info(f"✅ User set to: {doc.user}", "Hook Debug")
         else:
-            frappe.log_info(f"ℹ️ User already set to: {doc.get('user')}", "Hook Debug")
+            frappe.log_info(f"User already set to: {doc.get('user')}", "Hook Debug")
     
     frappe.log_info("🎯 HOOK COMPLETED", "Hook Debug")
