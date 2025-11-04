@@ -19,7 +19,8 @@ def before_insert(doc, method=None):
         if not doc.get('user') and frappe.session.user:
             doc.user = frappe.session.user
     except Exception as e:
-        frappe.log_error(f"Error in before_insert: {str(e)}")
+        frappe.log_error(f"Error in before_insert: {e!s}")
+
 
 def before_save(doc, method=None):
     """Auto-set user if missing on save"""
@@ -27,7 +28,7 @@ def before_save(doc, method=None):
         if not doc.get('user') and frappe.session.user:
             doc.user = frappe.session.user
     except Exception as e:
-        frappe.log_error(f"Error in before_save: {str(e)}")
+        frappe.log_error(f"Error in before_save: {e!s}")
 
 
 def set_current_user(doc, method=None):
