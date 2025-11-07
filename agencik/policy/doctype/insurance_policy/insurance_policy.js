@@ -115,7 +115,6 @@ function fillFormWithOcrData(frm, data) {
         client: "Klient",
         vehicle: "Pojazd",
         coverage_start: "Początek ochrony",
-        coverage_end: "Koniec ochrony"
     };
 
     // ✅ Uzupełnienie pól (tylko jeśli dane są prawidłowe)
@@ -123,13 +122,11 @@ function fillFormWithOcrData(frm, data) {
     if (data.insurance_company) frm.set_value('insurance_company', cleanText(data.insurance_company));
     if (data.client) frm.set_value('client', cleanText(data.client));
     if (data.vehicle) frm.set_value('vehicle', cleanVehicle(data.vehicle));
+    if (data.vehicle_type) frm.set_value('vehicle_type', cleanVehicle(data.vehicle_type));
 
     // 🔹 Walidacja i ustawienie dat
     if (isValidDate(data.coverage_start)) {
         frm.set_value('coverage_start', formatDate(data.coverage_start));
-    }
-    if (isValidDate(data.coverage_end)) {
-        frm.set_value('coverage_end', formatDate(data.coverage_end));
     }
 
     frm.refresh_fields();
@@ -140,12 +137,12 @@ function fillFormWithOcrData(frm, data) {
 function cleanVehicle(text) {
     if (!text) return "";
     return text
-        .replace(/nr rejestracyjny[:\s]*/i, '')
-        .replace(/rejestracyjny/i, '')
-        .replace(/nr/i, '')
-        .replace(/\s+/g, '')
-        .trim()
-        .toUpperCase();
+        // .replace(/nr rejestracyjny[:\s]*/i, '')
+        // .replace(/rejestracyjny/i, '')
+        .replace(/nr/i, ' ')
+    // .replace(/\s+/g, '')
+    // .trim()
+    // .toUpperCase();
 }
 
 

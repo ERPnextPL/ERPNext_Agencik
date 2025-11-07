@@ -78,9 +78,11 @@ class DocumentRegionDetector:
     # -----------------------------------------------------------
     def preprocess_image(self) -> np.ndarray:
         """Podstawowe czyszczenie obrazu dla lepszego OCR."""
-        gray = cv2.cvtColor(self.original, cv2.COLOR_BGR2GRAY)
-        blur = cv2.GaussianBlur(gray, (5, 5), 0)
-        edges = cv2.Canny(blur, 50, 150)
+        denoised = cv2.fastNlMeansDenoisingColored(self.original, None, h=10, hColor=10, templateWindowSize=7, searchWindowSize=21)
+        gray = cv2.cvtColor(denoised, cv2.COLOR_BGR2GRAY)
+        
+        # blur = cv2.GaussianBlur(gray, (5, 5), 0)
+        edges = cv2.Canny(gray, 50, 150)
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
         dilated = cv2.dilate(edges, kernel, iterations=1)
         self.processed = cv2.morphologyEx(dilated, cv2.MORPH_CLOSE, kernel, iterations=2)

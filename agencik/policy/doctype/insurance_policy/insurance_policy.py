@@ -28,15 +28,15 @@ class InsurancePolicy(Document):
     #         )
 
 
-    def validate(self):
-        """Automatycznie ustaw coverage_end na podstawie coverage_start"""
-        if self.coverage_start:
-            if not self.coverage_end or self.has_value_changed('coverage_start'):
-                self.coverage_end = add_years(self.coverage_start, 1)
+    # def validate(self):
+    #     """Automatycznie ustaw coverage_end na podstawie coverage_start"""
+    #     if self.coverage_start:
+    #         if not self.coverage_end or self.has_value_changed('coverage_start'):
+    #             self.coverage_end = add_years(self.coverage_start, 1)
         
-        # Automatyczne obliczanie prowizji
-        if self.insurance_components:
-            self.calculate_commission()
+    #     # Automatyczne obliczanie prowizji
+    #     if self.insurance_components:
+    #         self.calculate_commission()
 
     def calculate_commission(self):
         """Oblicza prowizję na podstawie wybranych komponentów ubezpieczenia"""

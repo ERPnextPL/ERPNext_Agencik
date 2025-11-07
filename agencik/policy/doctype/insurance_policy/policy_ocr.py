@@ -116,7 +116,7 @@ def parse_ocr_results(text_blocks):
             "pzu", "warta", "allianz", "generali", "link4", "axa", "uniqa", "compensa", "mtu"
         ],
         "coverage_start": [],
-        "coverage_end": [],
+        # "coverage_end": [],
         "client": [
             "ubezpieczajacy", "klient", "nabywca", "ubezpieczony",
             "leasingobiorca", "dane klienta", "leasing", "spółka z ograniczoną odpowiedzialnością"
@@ -147,23 +147,95 @@ def parse_ocr_results(text_blocks):
         if date_range:
             start, _ = date_range[0]
             extracted["coverage_start"] = normalize_date(start)
-            # extracted["coverage_end"] = normalize_date(end)
+            # extracted["coverage_end"] = None
             continue
 
         # ---------------- NUMER POLISY ----------------
-        if any(kw in text for kw in ["nr polisy", "numer polisy", "polisa nr", "nr umowy"]):
+        if any(kw in text for kw in mapping["policy_number"]):
             numbers = re.findall(r"\b\d{8,12}\b", text)
             if numbers:
+                # Prefer policy numbers starting with '1' or '5' due to common numbering conventions used by insurance companies.
                 preferred = [n for n in numbers if n.startswith(('1', '5'))]
                 extracted["policy_number"] = preferred[0] if preferred else numbers[0]
                 continue
 
         # ---------------- POJAZD ----------------
-        if any(kw in text for kw in ["nr rejestracyjny", "rejestracyjny numer", "pojazd", "vin"]):
-            reg = re.findall(r"\b[A-Z]{1,3}\s?\d{4,5}[A-Z]{0,2}\b", text.upper())
-            if reg:
-                extracted["vehicle"] = reg[0].replace(" ", "")
-                continue
+        if any(kw in label for kw in ["pojazd", "samochód"]) or any(
+            kw in text for kw in ["nr rejestracyjny", "vin", "marka", "model", "rok produkcji", "pojazd"]
+        ):
+            clean_text = re.sub(r"[\n\r,;]+", " ", text)
+            clean_text = re.sub(r"\s{2,}", " ", clean_text)
+            clean_text = clean_text.upper()
+
+            # 🔹 Wstaw brakujące spacje po dwukropkach, np. "VIN:1C4R" → "VIN: 1C4R"
+            clean_text = re.sub(r"([A-Z])(:)([A-Z0-9])", r"\1: \3", clean_text)
+            print(f"Clean full vehicle text: {clean_text}")
+                    # UBEZPIECZONY POJAZD NR REJESTRACYJNY: DW5WA06 MARKA: JEEP MODEL: GRAND CHEROKEE TYP: GRAND CHEROKEE ROK PRODUKCJI: 2020 VIN: 1.C4RJFBG8LC299113 POJEMNOŚĆ SILNIKA: 3604 CCM
+                    #UBEZPIECZONY POJAZD NR REJESTRACYJNY: KK77794 MARKA: BMW MODEL: X1 [F48] 15-19 TYP: X1 XDRIVE25D M SPORT SPORT-AUT ROK PRODUKCJI: 2016 VIN: WBAHU510405E45525 POJEMNOŚĆ SILNIKA: 1995 CCM
+            
+            # 🔹 Wyszukaj pola niezależnie od kolejności
+            # reg_match = re.search(
+            #     r"(UBEZPIECZONY\s*POJAZD|NR\s*REJESTRACYJNY|REJESTRACYJNY: |UBEZPIECZONY POJAZD NR REJESTRACYJNY: )[:\s]*([A-Z]{1,3}\s?\d{4,5}[A-Z]{0,2})",
+            #     clean_text
+            # )
+            marka_match = re.search(
+                r"MARKA[:\s]*([A-Z0-9ĄĆĘŁŃÓŚŹŻ ]+?)(?=\s+(?:MODEL|TYP|ROK|VIN|POJEMNOŚĆ|$))",
+                clean_text
+            )
+            model_match = re.search(
+                r"MODEL[:\s]*([A-Z0-9ĄĆĘŁŃÓŚŹŻ ]+?)(?=\s+(?:TYP|ROK|VIN|POJEMNOŚĆ|$))",
+                clean_text
+            )
+            rok_match = re.search(
+                r"ROK\s*PRODUKCJI[:\s]*(\d{4})",
+                clean_text
+            )
+            vin_match = re.search(
+                r"VIN:\s*([A-Z0-9\.]+)",
+                clean_text
+            )
+
+            # # 🔹 Zbuduj listę wartości
+            values = []
+            # if reg_match:
+            #     values.append(reg_match.group(1).replace("", " "))
+            #     print(f"Found registration: {reg_match.group(1)}")
+            if marka_match:
+                values.append(marka_match.group(1).strip())
+                print(f"Found marka: {marka_match.group(1)}")
+            if model_match:
+                values.append(model_match.group(1).strip())
+                print(f"Found model: {model_match.group(1)}")
+            if rok_match:
+                values.append(rok_match.group(1))
+                print(f"Found rok: {rok_match.group(1)}")
+            if vin_match:
+                values.append(vin_match.group(1).strip())
+                print(f"Found VIN: {vin_match.group(1)}")
+            # # 🔹 Ustaw wynik
+            if values:
+                extracted["vehicle_type"] = ", ".join(values).replace('.', '')
+                print(f"Vehicle extracted: {extracted['vehicle']}")
+            else:
+                extracted["vehicle"] = clean_text  # fallback – cały tekst
+                print(f"Vehicle fallback text: {clean_text}")
+
+            words_to_remove = [
+                "UBEZPIECZONY POJAZD NR REJESTRACYJNY:",
+                "ROK PRODUKCJI:",
+                "MODEL:",
+                # "MARKA:",
+                "TYP:",
+                "VIN:",
+                "POJEMNOŚĆ SILNIKA:",
+                "CCM"
+            ]
+            stop_words = ["MARKA:"]
+
+            result = clean_text_advanced(clean_text, words_to_remove, stop_words)
+            extracted["vehicle"] = result
+            continue
+
 
         # ---------------- KLIENT ----------------
         if any(k in label for k in ["leasingobiorca", "ubezpieczajacy"]) and not extracted["client"]:
@@ -206,6 +278,49 @@ def normalize_date(text):
     return dt.strftime("%Y-%m-%d")
 
 
+def clean_text_advanced(text, words_to_remove=None, stop_words=None, remove_duplicates=True):
+    """
+    Czyści tekst: usuwa wybrane słowa, wszystko po wskazanym słowie i powtarzające się słowa
+    """
+    if words_to_remove is None:
+        words_to_remove = []
+    if stop_words is None:
+        stop_words = []
+    
+    # 1. Usuwanie pojedynczych słów
+    for word in words_to_remove:
+        text = text.replace(word, "")
+    
+    # 2. Usuwanie wszystkiego po słowie stop
+    for stop_word in stop_words:
+        if stop_word in text:
+            text = text[:text.index(stop_word)].strip()
+            break
+    
+    # 3. Usuwanie podwójnych spacji
+    text = ", ".join(text.split())
+    
+    # 4. Usuwanie powtarzających się słów
+    if remove_duplicates:
+        text = remove_duplicate_words(text)
+    
+    return text
+
+def remove_duplicate_words(text):
+    """
+    Usuwa powtarzające się słowa zachowując kolejność
+    """
+    words = text.split()
+    seen = set()
+    unique_words = []
+    
+    for word in words:
+        if word not in seen:
+            seen.add(word)
+            unique_words.append(word)
+    
+    return ' '.join(unique_words)
+
 def normalize_insurance_company(text):
     if not text:
         return None
@@ -235,9 +350,9 @@ def clean_vehicle_text(text):
     text = text.lower()
     text = text.replace("nr rejestracyjny", "")
     text = text.replace("rejestracyjny", "")
-    text = text.replace("nr", "")
+    # text = text.replace("nr", "")
     text = text.strip().upper()
-    text = text.replace(" ", "")
+    # text = text.replace(" ", "")
     return text
 
 
