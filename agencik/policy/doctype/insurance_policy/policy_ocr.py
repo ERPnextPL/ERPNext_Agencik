@@ -12,7 +12,7 @@ from .ocr import DocumentRegionDetector
 
 @frappe.whitelist()
 def process_policy_file(docname):
-    """Główna funkcja wywoływana przez after_insert / on_update."""
+    # """Główna funkcja wywoływana przez after_insert / on_update."""
     try:
         doc = frappe.get_doc("Insurance Policy", docname)
         result = process_policy_file_internal(doc)
@@ -24,7 +24,7 @@ def process_policy_file(docname):
 
 @frappe.whitelist()
 def process_policy_temp(data):
-    """Tymczasowe przetwarzanie dokumentu przed zapisaniem (bez zapisu do bazy)."""
+    # """Tymczasowe przetwarzanie dokumentu przed zapisaniem (bez zapisu do bazy)."""
     try:
         doc_data = json.loads(data)
         file_url = doc_data.get("policy_fille")
@@ -67,7 +67,7 @@ def process_policy_temp(data):
 
 
 def process_policy_file_internal(doc):
-    """Pełne przetwarzanie OCR (bez automatycznego zapisu dokumentu)."""
+    # """Pełne przetwarzanie OCR (bez automatycznego zapisu dokumentu)."""
     try:
         file_doc = frappe.get_doc("File", {"file_url": doc.policy_fille})
         file_path = file_doc.get_full_path()
@@ -279,9 +279,9 @@ def normalize_date(text):
 
 
 def clean_text_advanced(text, words_to_remove=None, stop_words=None, remove_duplicates=True):
-    """
-    Czyści tekst: usuwa wybrane słowa, wszystko po wskazanym słowie i powtarzające się słowa
-    """
+    # """
+    # Czyści tekst: usuwa wybrane słowa, wszystko po wskazanym słowie i powtarzające się słowa
+    # """
     if words_to_remove is None:
         words_to_remove = []
     if stop_words is None:
@@ -307,9 +307,9 @@ def clean_text_advanced(text, words_to_remove=None, stop_words=None, remove_dupl
     return text
 
 def remove_duplicate_words(text):
-    """
-    Usuwa powtarzające się słowa zachowując kolejność
-    """
+    # """
+    # Usuwa powtarzające się słowa zachowując kolejność
+    # """
     words = text.split()
     seen = set()
     unique_words = []
@@ -361,7 +361,7 @@ def clean_vehicle_text(text):
 # ===============================================================
 
 def ensure_client_exists(name):
-    """Zwraca nazwę klienta (Customer). Tworzy rekord, jeśli nie istnieje."""
+    # """Zwraca nazwę klienta (Customer). Tworzy rekord, jeśli nie istnieje."""
     if not name:
         return None
 
@@ -382,16 +382,15 @@ def ensure_client_exists(name):
     existing = frappe.db.exists("Customer", {"customer_name": name})
     if existing:
         return existing  # zwróć nazwę (docname)
-
-    try:
-        # Utwórz nowego klienta
-        new_customer = frappe.get_doc({
+    # Utwórz nowego klienta
+    new_customer = frappe.get_doc({
             "doctype": "Customer",
             "customer_name": name,
             "customer_type": "Individual",  # zawsze osoba fizyczna
             "customer_group": "Individual",  # jeśli masz taką grupę
             "territory": "All Territories"   # wymagane w ERPNext
         })
+    try:        
         new_customer.insert(ignore_permissions=True)
         frappe.db.commit()
         frappe.log_error(f"✅ Utworzono klienta (Customer): {name}", "OCR ensure_client_exists")

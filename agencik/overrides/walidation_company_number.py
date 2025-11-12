@@ -38,6 +38,7 @@ def length_company(doc, method=None):
         frappe.msgprint(_(
             f"No length rule defined for {doc.insurance_company} in Insurers doctype"
         ))
+        
     # Sprawdzenie regexa (jeśli zdefiniowany)
     # if insurer.format_regex:
     #     pattern = re.compile(insurer.format_regex)

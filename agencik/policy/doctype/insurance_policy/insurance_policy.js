@@ -1,4 +1,4 @@
-frappe.ui.form.on('Insurance Policy', {
+frappe.ui.form.on("Insurance Policy", {
 
     // 🔹 Obliczanie prowizji
     calculate_your_commission(frm) {
@@ -17,8 +17,8 @@ frappe.ui.form.on('Insurance Policy', {
 
     // 🔹 Gdy użytkownik doda nowy plik PDF
     policy_fille(frm) {
-        if (!frm.doc.policy_fille || !frm.doc.policy_fille.endsWith('.pdf')) {
-            frappe.msgprint(__('📄 Dodaj plik PDF, aby uruchomić OCR.'));
+        if (!frm.doc.policy_fille || !frm.doc.policy_fille.endsWith(".pdf")) {
+            frappe.msgprint(__("📄 Dodaj plik PDF, aby uruchomić OCR."));
             return;
         }
 
@@ -37,24 +37,21 @@ frappe.ui.form.on('Insurance Policy', {
             freeze_message: __("⏳ Trwa analiza dokumentu PDF przez OCR..."),
             callback: function (r) {
                 console.log("📘 OCR response:", r);
-
                 if (r.message && r.message.success && r.message.data) {
                     const data = r.message.data;
                     console.log("📘 OCR extracted data:", data);
                     fillFormWithOcrData(frm, data);
-
                     frappe.show_alert({
                         message: __("✅ Dane z OCR zostały uzupełnione. Zapisz dokument, jeśli wszystko się zgadza."),
                         indicator: "green"
                     });
                 } else {
                     console.error("❌ OCR Error:", r);
-                    frappe.msgprint(__('❌ Nie udało się przetworzyć dokumentu OCR.'));
+                    frappe.msgprint(__("❌ Nie udało się przetworzyć dokumentu OCR."));
                 }
             }
         });
     },
-
 
 
     // 🔹 Ustawienie daty końca ochrony
@@ -65,7 +62,7 @@ frappe.ui.form.on('Insurance Policy', {
     },
 
     coverage_start(frm) {
-        console.log('📅 coverage_start changed to:', frm.doc.coverage_start);
+        console.log("📅 coverage_start changed to:", frm.doc.coverage_start);
         if (frm.doc.coverage_start) {
             setCoverageEnd(frm);
         }
@@ -80,7 +77,7 @@ frappe.ui.form.on('Insurance Policy', {
 // 🔹 Przetwarzanie OCR z zapisanego dokumentu (po stronie serwera)
 function processOcrFile(frm) {
     if (!frm.doc.name || frm.doc.__islocal) {
-        frappe.msgprint(__('💾 Zapisz dokument przed przetwarzaniem OCR.'));
+        frappe.msgprint(__("💾 Zapisz dokument przed przetwarzaniem OCR."));
         return;
     }
 
@@ -98,7 +95,7 @@ function processOcrFile(frm) {
                     indicator: "green"
                 });
             } else {
-                frappe.msgprint(__('❌ Nie udało się przetworzyć dokumentu OCR.'));
+                frappe.msgprint(__("❌ Nie udało się przetworzyć dokumentu OCR."));
             }
         }
     });
@@ -118,15 +115,15 @@ function fillFormWithOcrData(frm, data) {
     };
 
     // ✅ Uzupełnienie pól (tylko jeśli dane są prawidłowe)
-    if (data.policy_number) frm.set_value('policy_number', cleanText(data.policy_number));
-    if (data.insurance_company) frm.set_value('insurance_company', cleanText(data.insurance_company));
-    if (data.client) frm.set_value('client', cleanText(data.client));
-    if (data.vehicle) frm.set_value('vehicle', cleanVehicle(data.vehicle));
-    if (data.vehicle_type) frm.set_value('vehicle_type', cleanVehicle(data.vehicle_type));
+    if (data.policy_number) frm.set_value("policy_number", cleanText(data.policy_number));
+    if (data.insurance_company) frm.set_value("insurance_company", cleanText(data.insurance_company));
+    if (data.client) frm.set_value("client", cleanText(data.client));
+    if (data.vehicle) frm.set_value("vehicle", cleanVehicle(data.vehicle));
+    if (data.vehicle_type) frm.set_value("vehicle_type", cleanVehicle(data.vehicle_type));
 
     // 🔹 Walidacja i ustawienie dat
     if (isValidDate(data.coverage_start)) {
-        frm.set_value('coverage_start', formatDate(data.coverage_start));
+        frm.set_value("coverage_start", formatDate(data.coverage_start));
     }
 
     frm.refresh_fields();
@@ -137,10 +134,10 @@ function fillFormWithOcrData(frm, data) {
 function cleanVehicle(text) {
     if (!text) return "";
     return text
-        // .replace(/nr rejestracyjny[:\s]*/i, '')
-        // .replace(/rejestracyjny/i, '')
-        .replace(/nr/i, ' ')
-    // .replace(/\s+/g, '')
+        // .replace(/nr rejestracyjny[:\s]*/i, "")
+        // .replace(/rejestracyjny/i, "")
+        .replace(/nr/i, " ")
+    // .replace(/\s+/g, "")
     // .trim()
     // .toUpperCase();
 }
@@ -149,7 +146,7 @@ function cleanVehicle(text) {
 // 🔹 Proste czyszczenie tekstu
 function cleanText(text) {
     if (!text) return "";
-    return text.replace(/[\n\r]+/g, ' ').trim();
+    return text.replace(/[\n\r]+/g, " ").trim();
 }
 
 
@@ -171,27 +168,27 @@ function formatDate(dateStr) {
 // 🔹 Obliczanie prowizji
 function calculateCommission(frm) {
     if (!frm.doc.insurance_components || frm.doc.insurance_components.length === 0) {
-        frm.set_value('commission_vehicle', 0);
-        frm.refresh_field('commission_vehicle');
-        frappe.msgprint(__('Najpierw wybierz co najmniej jeden komponent ubezpieczenia.'));
+        frm.set_value("commission_vehicle", 0);
+        frm.refresh_field("commission_vehicle");
+        frappe.msgprint(__("Najpierw wybierz co najmniej jeden komponent ubezpieczenia."));
         return;
     }
 
-    frm.call('calculate_commission_api').then(r => {
+    frm.call("calculate_commission_api").then(r => {
         if (r.message) {
             const commission_amount = r.message.commission;
             const components_count = r.message.components_count;
 
-            frm.refresh_field('commission_vehicle');
+            frm.refresh_field("commission_vehicle");
             frappe.show_alert({
-                message: __('💰 Prowizja: {0} (na podstawie {1} komponentów)',
+                message: __("💰 Prowizja: {0} (na podstawie {1} komponentów)",
                     [format_currency(commission_amount), components_count]),
-                indicator: 'green'
+                indicator: "green"
             });
         }
     }).catch(err => {
-        console.error('Error calculating commission:', err);
-        frappe.msgprint(__('Błąd podczas obliczania prowizji.'));
+        console.error("Error calculating commission:", err);
+        frappe.msgprint(__("Błąd podczas obliczania prowizji."));
     });
 }
 
@@ -206,6 +203,6 @@ function setCoverageEnd(frm) {
     endDate.setFullYear(endDate.getFullYear() + 1);
     endDate.setDate(endDate.getDate() - 1);
 
-    frm.set_value('coverage_end', frappe.datetime.obj_to_str(endDate));
-    console.log('📅 coverage_end ustawione na:', frm.doc.coverage_end);
+    frm.set_value("coverage_end", frappe.datetime.obj_to_str(endDate));
+    console.log("📅 coverage_end ustawione na:", frm.doc.coverage_end);
 }

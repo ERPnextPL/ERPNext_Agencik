@@ -13,7 +13,7 @@ import frappe
 # 🔹 Funkcja pomocnicza do wykrywania ścieżki Tesseract
 # ===============================================================
 def _resolve_tesseract_path() -> str:
-    """Locate the Tesseract executable and configure pytesseract accordingly."""
+    # """Locate the Tesseract executable and configure pytesseract accordingly."""
     configured_cmd = getattr(pytesseract.pytesseract, "tesseract_cmd", "tesseract")
     resolved_cmd = shutil.which(configured_cmd)
     if resolved_cmd:
@@ -50,7 +50,7 @@ def _resolve_tesseract_path() -> str:
 # 🔹 Główna klasa OCR — uproszczona, bez wywołania main()
 # ===============================================================
 class DocumentRegionDetector:
-    """Detector for identifying and reading structured insurance PDF documents."""
+    # """Detector for identifying and reading structured insurance PDF documents."""
 
     def __init__(self, input_path: str, poppler_path: str = None):
         self.input_path = input_path
@@ -62,7 +62,7 @@ class DocumentRegionDetector:
 
     # -----------------------------------------------------------
     def load_image(self):
-        """Ładuje obraz – jeśli PDF, konwertuje do JPG."""
+        # """Ładuje obraz – jeśli PDF, konwertuje do JPG."""
         if self.input_path.lower().endswith(".pdf"):
             pages = convert_from_path(self.input_path, dpi=200, poppler_path=self.poppler_path)
             self.image_path = frappe.generate_hash(length=10) + "_page1.jpg"
@@ -77,7 +77,7 @@ class DocumentRegionDetector:
 
     # -----------------------------------------------------------
     def preprocess_image(self) -> np.ndarray:
-        """Podstawowe czyszczenie obrazu dla lepszego OCR."""
+        # """Podstawowe czyszczenie obrazu dla lepszego OCR."""
         denoised = cv2.fastNlMeansDenoisingColored(self.original, None, h=10, hColor=10, templateWindowSize=7, searchWindowSize=21)
         gray = cv2.cvtColor(denoised, cv2.COLOR_BGR2GRAY)
         
@@ -90,7 +90,7 @@ class DocumentRegionDetector:
 
     # -----------------------------------------------------------
     def detect_regions(self, min_area: int = 1000, max_area_ratio: float = 0.5, padding: int = 5) -> List[Dict]:
-        """Znajduje większe sekcje dokumentu (ramki tekstowe)."""
+        # """Znajduje większe sekcje dokumentu (ramki tekstowe)."""
         if self.processed is None:
             raise ValueError("Call preprocess_image() before detect_regions().")
 
@@ -115,8 +115,8 @@ class DocumentRegionDetector:
         return regions
 
     # -----------------------------------------------------------
-    def assign_labels_by_keywords(self, lang='pol+eng') -> List[Dict]:
-        """Przypisuje etykiety na podstawie OCR i słów kluczowych."""
+    def assign_labels_by_keywords(self, lang="pol+eng") -> List[Dict]:
+        # """Przypisuje etykiety na podstawie OCR i słów kluczowych."""
         _resolve_tesseract_path()
 
         label_keywords = {
@@ -131,26 +131,26 @@ class DocumentRegionDetector:
         }
 
         for region in self.regions:
-            x, y, w, h = region['bbox']
+            x, y, w, h = region["bbox"]
             roi = self.original[y:y + h, x:x + w]
             gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
             text = pytesseract.image_to_string(gray, lang=lang).lower()
-            region['ocr_text'] = text.strip()
+            region["ocr_text"] = text.strip()
             best_label = None
             for label, keywords in label_keywords.items():
                 if any(kw in text for kw in keywords):
                     best_label = label
                     break
-            region['label'] = best_label if best_label else f"Region_{region['id']}"
+            region["label"] = best_label if best_label else f"Region_{region["id"]}"
         return self.regions
 
     # -----------------------------------------------------------
-    def read_text_from_regions_enhanced(self, lang='pol+eng', scale_factor=2.0) -> List[Dict]:
-        """Czyta tekst z każdej sekcji po wstępnym przetworzeniu."""
+    def read_text_from_regions_enhanced(self, lang="pol+eng", scale_factor=2.0) -> List[Dict]:
+        # """Czyta tekst z każdej sekcji po wstępnym przetworzeniu."""
         _resolve_tesseract_path()
         extracted_texts = []
         for region in self.regions:
-            x, y, w, h = region['bbox']
+            x, y, w, h = region["bbox"]
             roi = self.original[y:y + h, x:x + w]
             if scale_factor != 1.0:
                 roi = cv2.resize(roi, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_CUBIC)
@@ -158,5 +158,6 @@ class DocumentRegionDetector:
             denoised = cv2.bilateralFilter(gray, 9, 75, 75)
             cleaned = cv2.adaptiveThreshold(denoised, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
             text = pytesseract.image_to_string(cleaned, lang=lang).strip()
-            extracted_texts.append({"label": region.get("label", f"region_{region['id']}"), "text": text})
+            extracted_texts.append({"label": region.get("label", f"region_{region["id"]}"), "text": text})
         return extracted_texts
+
