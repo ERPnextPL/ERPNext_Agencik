@@ -120,6 +120,7 @@ function fillFormWithOcrData(frm, data) {
     if (data.client) frm.set_value("client", cleanText(data.client));
     if (data.vehicle) frm.set_value("vehicle", cleanVehicle(data.vehicle));
     if (data.vehicle_type) frm.set_value("vehicle_type", cleanVehicle(data.vehicle_type));
+    if (data.vin) frm.set_value("vin", cleanText(data.vin));
 
     // 🔹 Walidacja i ustawienie dat
     if (isValidDate(data.coverage_start)) {

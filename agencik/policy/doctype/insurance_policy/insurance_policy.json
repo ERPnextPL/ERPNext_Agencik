@@ -28,8 +28,6 @@
   "calculate_your_commission",
   "home_section",
   "insurance_period",
-  "commission",
-  "insurance_premium",
   "send_tab",
   "policy_fille",
   "komunikacyjna_tab",
@@ -93,7 +91,6 @@
    "reqd": 1
   },
   {
-   "depends_on": "eval:doc.type_policy == \"Home\";",
    "fieldname": "insurance_period",
    "fieldtype": "Int",
    "label": "Insurance Period"
@@ -105,26 +102,12 @@
   {
    "depends_on": "eval:doc.type_policy == \"Home\";",
    "fieldname": "home_section",
-   "fieldtype": "Column Break",
-   "label": "home"
+   "fieldtype": "Column Break"
   },
   {
    "depends_on": "eval:doc.typ_polisy=='Transport';",
    "fieldname": "transport_section",
-   "fieldtype": "Column Break",
-   "label": "transport"
-  },
-  {
-   "depends_on": "eval:doc.type_policy == \"Home\";",
-   "fieldname": "commission",
-   "fieldtype": "Currency",
-   "label": "Commission"
-  },
-  {
-   "depends_on": "eval:doc.type_policy == \"Home\";",
-   "fieldname": "insurance_premium",
-   "fieldtype": "Currency",
-   "label": "Insurance premium"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "insurance_value",
@@ -212,7 +195,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-07 11:33:59.152444",
+ "modified": "2025-11-13 14:47:13.189770",
  "modified_by": "Administrator",
  "module": "Policy",
  "name": "Insurance Policy",

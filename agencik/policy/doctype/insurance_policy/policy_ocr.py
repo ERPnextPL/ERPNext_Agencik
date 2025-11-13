@@ -145,9 +145,9 @@ def parse_ocr_results(text_blocks):
             text
         )
         if date_range:
-            start, _ = date_range[0]
+            start, end = date_range[0]
             extracted["coverage_start"] = normalize_date(start)
-            # extracted["coverage_end"] = None
+            extracted["coverage_end"] = normalize_date(end)
             continue
 
         # ---------------- NUMER POLISY ----------------
@@ -210,8 +210,11 @@ def parse_ocr_results(text_blocks):
                 values.append(rok_match.group(1))
                 print(f"Found rok: {rok_match.group(1)}")
             if vin_match:
-                values.append(vin_match.group(1).strip())
-                print(f"Found VIN: {vin_match.group(1)}")
+                # values.append(vin_match.group(1).strip())
+                vin_num = vin_match.group(1).strip()
+                # vin_num=clean_text_advanced(vin_match, words_to_remove, stop_words)
+                extracted["vin"] = vin_num.replace('.', '')
+                print(f"Found VIN: {extracted['vin']}")
             # # 🔹 Ustaw wynik
             if values:
                 extracted["vehicle_type"] = ", ".join(values).replace('.', '')
@@ -231,7 +234,7 @@ def parse_ocr_results(text_blocks):
                 "CCM"
             ]
             stop_words = ["MARKA:"]
-
+            # extracted["vin"] = vin_match
             result = clean_text_advanced(clean_text, words_to_remove, stop_words)
             extracted["vehicle"] = result
             continue
@@ -322,26 +325,35 @@ def remove_duplicate_words(text):
     return ' '.join(unique_words)
 
 def normalize_insurance_company(text):
+    # """Dopasowuje nazwę firmy ubezpieczeniowej na podstawie bazy 'Insurers'."""
     if not text:
         return None
 
     text = text.lower()
-    companies = {
-        "pzu": "PZU",
-        "warta": "Warta",
-        "allianz": "Allianz",
-        "uniqa": "Uniqa",
-        "compensa": "Compensa",
-        "mtu": "MTU",
-        "axa": "AXA",
-        "generali": "Generali",
-        "link4": "LINK4",
-    }
 
-    for key, clean_name in companies.items():
-        if key in text:
-            return clean_name
-    return None
+    try:
+        # Pobierz wszystkie firmy z Doctype 'Insurers' (pole 'company')
+        insurers = frappe.get_all("Insurers", fields=["company"])
+
+        for row in insurers:
+            company_name = row.get("company", "")
+            if not company_name:
+                continue
+
+            # Porównuj w wersji lowercase i usuń znaki niealfanumeryczne dla tolerancji OCR
+            normalized_db = re.sub(r"[^a-z0-9]", "", company_name.lower())
+            normalized_text = re.sub(r"[^a-z0-9]", "", text)
+
+            # Jeżeli firma z bazy występuje w tekście — zwróć jej pełną nazwę
+            if normalized_db in normalized_text or normalized_text in normalized_db:
+                return company_name
+
+        return None
+
+    except Exception as e:
+        frappe.log_error(f"Błąd przy pobieraniu firm z Insurers: {e}", "OCR normalize_insurance_company")
+        return None
+
 
 
 def clean_vehicle_text(text):
