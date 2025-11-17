@@ -1,3 +1,5 @@
+from . import __version__ as app_version
+
 app_name = "agencik"
 app_title = "Agencik"
 app_publisher = "Jan"
@@ -9,35 +11,39 @@ app_license = "mit"
 #     if doc.doctype == "add_creater_policy":
 #         doc.user = frappe.session.user
 
-doc_events = {
-    "Sales Person": {
-        "validate": "agencik.overrides.sales_person_controller.validate_item"
-    }
-} 
 
 
 doc_events = {
     "Sales Person": {
         "before_insert": "agencik.overrides.add_creater_policy.before_insert",
         "before_save": "agencik.overrides.add_creater_policy.before_save",
-        "set_current_user": "agencik.overrides.add_creater_policy.set_current_user"
+        "set_current_user": "agencik.overrides.add_creater_policy.set_current_user",
+        "validate": "agencik.overrides.sales_person_controller.validate_item"
+    },
+    "Insurance Policy": {
+        "validate": "agencik.overrides.walidation_company_number.length_company",
+        # "after_insert": "agencik.policy.doctype.insurance_policy.insurance_policy.after_insert",
+        # "on_update": "agencik.policy.doctype.insurance_policy.insurance_policy.on_update",
+        # "on_trash": "agencik.policy.idoctype.nsurance_policy.policy_ocr.on_policy_trash",
     }
+
+
 }
-# doc_events = {
-#     "Insurance Policy": {
-#         # "validate": "agencik.overrides.sales_person_controller.before_insert",
-#         "validate": "agencik.overrides.add_creater_policy.SalesPersonController"
-#     }
-# } 
 
-
-# doc_events = {
-# 	"*": {
-# 		"on_update": "agencik.overrides.sales_person_controller.printWord",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
+# permission_query_conditions = {
+#     "Insurance Policy": "agencik.policy.doctype.insurance_policy.policy_ocr.get_permission_query_conditions",
 # }
+fixtures = [
+    {"dt": "Client Script", "filters": [["name", "in", ["Insurance Policy"]]]},
+]
+
+doctype_js = {
+    "Insurance Policy": "doctype/insurance_policy/insurance_policy.js"
+}
+
+
+
+
 # Apps
 # ------------------
 

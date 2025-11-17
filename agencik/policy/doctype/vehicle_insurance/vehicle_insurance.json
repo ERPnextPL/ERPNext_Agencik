@@ -9,7 +9,8 @@
   "brand",
   "model",
   "year",
-  "plate_no"
+  "plate_no",
+  "vin"
  ],
  "fields": [
   {
@@ -42,6 +43,11 @@
    "label": "Plate_no",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "vin",
+   "fieldtype": "Data",
+   "label": "VIN"
   }
  ],
  "grid_page_length": 50,
@@ -52,8 +58,8 @@
    "link_fieldname": "owner"
   }
  ],
- "modified": "2025-10-07 10:16:34.327149",
- "modified_by": "jan@erptech.com",
+ "modified": "2025-10-17 09:19:39.189853",
+ "modified_by": "Administrator",
  "module": "Policy",
  "name": "Vehicle Insurance",
  "naming_rule": "By fieldname",

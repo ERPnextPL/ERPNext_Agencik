@@ -10,10 +10,10 @@ setup(
     name="erpnext_agencik",
     version=version,
     description="Agencik for ERPNext",
-    author="Your Name",
+    author="Jan",
     author_email="your@email.com",
     packages=find_packages(),
     zip_safe=False,
     include_package_data=True,
-    install_requires=install_requires
+    install_requires=install_requires,
 )

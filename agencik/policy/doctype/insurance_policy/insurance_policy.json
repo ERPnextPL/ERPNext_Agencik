@@ -6,29 +6,32 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "details_tab",
   "section_break_oput",
   "type_policy",
   "policy_number",
   "insurance_company",
   "coverage_start",
   "coverage_end",
-  "premium",
+  "premium_amount",
   "reminder",
   "client",
-  "agent",
-  "employee",
+  "user",
   "transport_section",
   "vehicle",
-  "insurancee_components",
+  "vehicle_type",
+  "brand",
+  "vin",
   "insurance_value",
+  "insurance_components",
   "commission_vehicle",
   "calculate_your_commission",
   "home_section",
   "insurance_period",
-  "commission",
-  "insurance_premium",
-  "notes",
-  "komunikacyjna_tab"
+  "send_tab",
+  "policy_fille",
+  "komunikacyjna_tab",
+  "amended_from"
  ],
  "fields": [
   {
@@ -41,10 +44,10 @@
   },
   {
    "fieldname": "insurance_company",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Insurance company",
-   "options": "PZU\nWarta\nAllianz",
+   "options": "Insurers",
    "reqd": 1
   },
   {
@@ -56,11 +59,6 @@
    "fieldname": "coverage_end",
    "fieldtype": "Date",
    "label": "Coverage end"
-  },
-  {
-   "fieldname": "premium",
-   "fieldtype": "Currency",
-   "label": "Premium"
   },
   {
    "default": "none",
@@ -93,7 +91,6 @@
    "reqd": 1
   },
   {
-   "depends_on": "eval:doc.type_policy == \"Home\";",
    "fieldname": "insurance_period",
    "fieldtype": "Int",
    "label": "Insurance Period"
@@ -105,59 +102,28 @@
   {
    "depends_on": "eval:doc.type_policy == \"Home\";",
    "fieldname": "home_section",
-   "fieldtype": "Column Break",
-   "label": "home"
+   "fieldtype": "Column Break"
   },
   {
    "depends_on": "eval:doc.typ_polisy=='Transport';",
    "fieldname": "transport_section",
-   "fieldtype": "Column Break",
-   "label": "transport"
+   "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.type_policy == \"Home\";",
-   "fieldname": "commission",
-   "fieldtype": "Currency",
-   "label": "Commission"
-  },
-  {
-   "depends_on": "eval:doc.type_policy == \"Home\";",
-   "fieldname": "notes",
-   "fieldtype": "Text",
-   "label": "Notes"
-  },
-  {
-   "depends_on": "eval:doc.type_policy == \"Home\";",
-   "fieldname": "insurance_premium",
-   "fieldtype": "Currency",
-   "label": "Insurance premium"
-  },
-  {
-   "depends_on": "eval:doc.type_policy == \"Transport\";",
    "fieldname": "insurance_value",
    "fieldtype": "Data",
    "label": "Insurance value",
-   "options": "Insurance2"
+   "options": "Company List"
   },
   {
-   "depends_on": "eval:doc.type_policy == \"Transport\";",
    "fieldname": "commission_vehicle",
    "fieldtype": "Currency",
    "label": "Commission vehicle"
   },
   {
-   "depends_on": "eval:doc.type_policy == \"Transport\";",
    "fieldname": "calculate_your_commission",
    "fieldtype": "Button",
    "label": "Calculate your commission"
-  },
-  {
-   "depends_on": "eval:doc.type_policy == \"Transport\";",
-   "fieldname": "insurancee_components",
-   "fieldtype": "Table MultiSelect",
-   "label": "Insurancee components",
-   "options": "Insurance1",
-   "sort_options": 1
   },
   {
    "fieldname": "komunikacyjna_tab",
@@ -165,23 +131,72 @@
    "label": "komunikacyjna"
   },
   {
-   "fieldname": "agent",
-   "fieldtype": "Link",
-   "label": "Agent",
-   "options": "Sales Person"
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
   },
   {
-   "fieldname": "employee",
+   "fieldname": "send_tab",
+   "fieldtype": "Tab Break",
+   "label": "Send"
+  },
+  {
+   "fieldname": "user",
    "fieldtype": "Link",
-   "label": "Employee",
-   "options": "Employee"
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fetch_from": "vehicle.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand",
+   "read_only": 1
+  },
+  {
+   "fieldname": "premium_amount",
+   "fieldtype": "Currency",
+   "label": "Premium"
+  },
+  {
+   "fieldname": "insurance_components",
+   "fieldtype": "Table MultiSelect",
+   "label": "Insurance components",
+   "options": "Insurance Module",
+   "sort_options": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Insurance Policy",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicle_type",
+   "fieldtype": "Data",
+   "label": "Vehicle type"
+  },
+  {
+   "fieldname": "vin",
+   "fieldtype": "Data",
+   "label": "VIN"
+  },
+  {
+   "fieldname": "policy_fille",
+   "fieldtype": "Attach",
+   "label": "Policy Fille"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2025-10-09 13:57:57.042279",
- "modified_by": "jan@erptech.com",
+ "modified": "2025-11-13 14:47:13.189770",
+ "modified_by": "Administrator",
  "module": "Policy",
  "name": "Insurance Policy",
  "naming_rule": "By fieldname",
@@ -200,6 +215,7 @@
    "write": 1
   }
  ],
+ "protect_attached_files": 1,
  "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
