@@ -30,7 +30,7 @@
   "insurance_period",
   "send_tab",
   "policy_fille",
-  "komunikacyjna_tab",
+  "communicational_tab",
   "amended_from"
  ],
  "fields": [
@@ -68,7 +68,6 @@
    "options": "none\nonly client\nClient+Agent"
   },
   {
-   "depends_on": "eval:doc.type_policy == \"Transport\";",
    "fieldname": "vehicle",
    "fieldtype": "Link",
    "label": "Vehicle",
@@ -86,8 +85,8 @@
   {
    "fieldname": "type_policy",
    "fieldtype": "Select",
-   "label": "Type Policy",
-   "options": "Transport\nHome",
+   "label": "Type policy",
+   "options": "Residental\nCommunicational",
    "reqd": 1
   },
   {
@@ -100,12 +99,10 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.type_policy == \"Home\";",
    "fieldname": "home_section",
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.typ_polisy=='Transport';",
    "fieldname": "transport_section",
    "fieldtype": "Column Break"
   },
@@ -123,12 +120,7 @@
   {
    "fieldname": "calculate_your_commission",
    "fieldtype": "Button",
-   "label": "Calculate your commission"
-  },
-  {
-   "fieldname": "komunikacyjna_tab",
-   "fieldtype": "Tab Break",
-   "label": "komunikacyjna"
+   "label": "Calculate"
   },
   {
    "fieldname": "details_tab",
@@ -189,13 +181,18 @@
    "fieldname": "policy_fille",
    "fieldtype": "Attach",
    "label": "Policy Fille"
+  },
+  {
+   "fieldname": "communicational_tab",
+   "fieldtype": "Tab Break",
+   "label": "Communicational"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-13 14:47:13.189770",
+ "modified": "2025-11-18 15:04:39.347610",
  "modified_by": "Administrator",
  "module": "Policy",
  "name": "Insurance Policy",

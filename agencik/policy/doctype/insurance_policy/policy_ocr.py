@@ -43,7 +43,7 @@ def process_policy_temp(data):
         detector.preprocess_image()
         detector.detect_regions(min_area=800, max_area_ratio=0.5, padding=10)
         detector.assign_labels_by_keywords(lang="pol+eng")
-        texts = detector.read_text_from_regions_enhanced(lang="pol+eng", scale_factor=2.0)
+        texts = detector.read_text_from_regions_enhanced(lang="pol+eng", scale_factor=3.0)
 
         extracted_data = parse_ocr_results(texts)
 
@@ -80,7 +80,7 @@ def process_policy_file_internal(doc):
         detector.preprocess_image()
         detector.detect_regions(min_area=800, max_area_ratio=0.5, padding=10)
         detector.assign_labels_by_keywords(lang="pol+eng")
-        texts = detector.read_text_from_regions_enhanced(lang="pol+eng", scale_factor=2.0)
+        texts = detector.read_text_from_regions_enhanced(lang="pol+eng", scale_factor=3.0)
 
         extracted_data = parse_ocr_results(texts)
 
@@ -270,7 +270,7 @@ def parse_ocr_results(text_blocks):
 
 def normalize_date(text):
     text = text.lower().replace("r.", "").replace("roku", "").strip()
-    text = text.replace("/", ".").replace("-", ".")
+    text = text.replace("/", ".").replace("-", ".").replace(":", "")
     try:
         dt = datetime.datetime.strptime(text, "%d.%m.%Y")
     except ValueError:
@@ -361,10 +361,12 @@ def clean_vehicle_text(text):
         return None
     text = text.lower()
     text = text.replace("nr rejestracyjny", "")
+    text = text.replace(":", "")
+    text = text.replace(",", "")
     text = text.replace("rejestracyjny", "")
     # text = text.replace("nr", "")
     text = text.strip().upper()
-    # text = text.replace(" ", "")
+    text = text.replace(" ", "")
     return text
 
 

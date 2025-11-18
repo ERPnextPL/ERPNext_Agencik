@@ -73,8 +73,33 @@ class InsurancePolicy(Document):
             "commission": self.commission_vehicle,
             "components_count": len(self.insurance_components) if self.insurance_components else 0
         }
-    
 
+    # def before_save(self):
+    #     # Tłumaczenia na polski
+    #     self.translated_type_policy = "Typ polisy"
+    #     self.translated_insurance_company = "Firma ubezpieczeniowa"
+    #     self.translated_coverage_start = "Data rozpoczęcia"
+    #     self.translated_coverage_end = "Data zakończenia"
+    #     self.translated_reminder = "Przypomnienie"
+    #     self.translated_client = "Klient"
+    #     self.translated_premium = "Składka"
+    #     self.translated_user = "Użytkownik"
+
+# @frappe.whitelist()
+# def get_polish_translations():
+#     """Zwraca wszystkie tłumaczenia po polsku"""
+#     return {
+#         'type_policy': "Typ polisy",
+#         'Insurance company': "Firma ubezpieczeniowa", 
+#         'coverage_start': "Data rozpoczęcia",
+#         'coverage_end': "Data zakończenia",
+#         'reminder': "Przypomnienie",
+#         'client': "Klient",
+#         'premium': "Składka",
+#         'user': "Użytkownik",
+#         'details': "Szczegóły",
+#         'send': "Wyślij"
+#     }
 
 
 

@@ -141,10 +141,13 @@ class DocumentRegionDetector:
                     best_label = label
                     break
             region["label"] = best_label if best_label else f"Region_{region['id']}"
+            
         return self.regions
 
+
+
     # -----------------------------------------------------------
-    def read_text_from_regions_enhanced(self, lang="pol+eng", scale_factor=2.0) -> List[dict]:
+    def read_text_from_regions_enhanced(self, lang="pol+eng", scale_factor=3.0) -> List[dict]:
         """Czyta tekst z każdej sekcji po wstępnym przetworzeniu."""
         _resolve_tesseract_path()
         extracted_texts = []
@@ -159,3 +162,4 @@ class DocumentRegionDetector:
             text = pytesseract.image_to_string(cleaned, lang=lang).strip()
             extracted_texts.append({"label": region.get("label", f"region_{region['id']}"), "text": text})
         return extracted_texts
+        
