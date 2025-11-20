@@ -74,58 +74,8 @@ class InsurancePolicy(Document):
             "components_count": len(self.insurance_components) if self.insurance_components else 0
         }
 
-    # def before_save(self):
-    #     # Tłumaczenia na polski
-    #     self.translated_type_policy = "Typ polisy"
-    #     self.translated_insurance_company = "Firma ubezpieczeniowa"
-    #     self.translated_coverage_start = "Data rozpoczęcia"
-    #     self.translated_coverage_end = "Data zakończenia"
-    #     self.translated_reminder = "Przypomnienie"
-    #     self.translated_client = "Klient"
-    #     self.translated_premium = "Składka"
-    #     self.translated_user = "Użytkownik"
-
-# @frappe.whitelist()
-# def get_polish_translations():
-#     """Zwraca wszystkie tłumaczenia po polsku"""
-#     return {
-#         'type_policy': "Typ polisy",
-#         'Insurance company': "Firma ubezpieczeniowa", 
-#         'coverage_start': "Data rozpoczęcia",
-#         'coverage_end': "Data zakończenia",
-#         'reminder': "Przypomnienie",
-#         'client': "Klient",
-#         'premium': "Składka",
-#         'user': "Użytkownik",
-#         'details': "Szczegóły",
-#         'send': "Wyślij"
-#     }
 
 
 
 
  
-
-    # def length_company(doc, method):
-    #     # Debug: sprawdź czy funkcja jest wywoływana
-    #     frappe.logger().debug(f"Validating policy number for company: {doc.insurance_company}")
-        
-    #     # Sprawdź czy mamy potrzebne dane
-    #     if not doc.insurance_company or not doc.policy_number:
-    #         return
-        
-    #     company = doc.insurance_company.strip()
-    #     policy_number = str(doc.policy_number).strip()
-        
-    #     if company == "Allianz":
-    #         if len(policy_number) != 10:
-    #             frappe.throw(_("For Allianz policy number must be exactly 10 characters long. Current length: {}").format(len(policy_number)))
-        
-    #     elif company == "Warta":
-    #         if len(policy_number) != 15:
-    #             frappe.throw(_("For Warta policy number must be exactly 15 characters long. Current length: {}").format(len(policy_number)))
-        
-    #     elif company == "Proama":
-    #         if len(policy_number) != 11:
-    #             frappe.throw(_("For Proama policy number must be exactly 11 characters long. Current length: {}").format(len(policy_number)))
-
