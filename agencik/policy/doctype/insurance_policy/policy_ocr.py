@@ -57,7 +57,7 @@ class TextParser:
     """Handles parsing of OCR text results"""
     
     MAPPING = {
-        "policy_number": ["numer polisy", "nr polisy", "policy no", "polisa nr", "nr umowy"],
+        "policy_number": ["numer polisy", "nr polisy", "policy no", "polisa nr", "nr umowy","nr"],
         "insurance_company": [
             "pzu", "warta", "allianz", "generali", "link4", "axa", "uniqa", "compensa", "mtu"
         ],
@@ -98,7 +98,7 @@ class TextParser:
 
         text = str(raw_text).lower().replace("\n", " ")
         label = str(raw_label).lower()
-        
+        # print("normalize_block_text",text, label)
         return text, label
 
     @classmethod
@@ -108,7 +108,7 @@ class TextParser:
             r"(\d{1,2}[./-]\d{1,2}[./-]\d{2,4})\s*r\.\s*(?:godz\.\s*\d{1,2}:\d{2})?\s*[–—-]\s*(\d{1,2}[./-]\d{1,2}[./-]\d{2,4})\s*r\.?",
             text
         )
-        
+        print("data", text)
         if date_range:
             start, end = date_range[0]
             extracted["coverage_start"] = DateNormalizer.normalize(start)
@@ -119,6 +119,8 @@ class TextParser:
     @classmethod
     def _process_policy_number(cls, extracted, text):
         """Extract policy number from text"""
+        print("text",text)
+        print(cls)
         if any(kw in text for kw in cls.MAPPING["policy_number"]):
             numbers = re.findall(r"\b\d{8,12}\b", text)
             if numbers:
@@ -126,6 +128,8 @@ class TextParser:
                 extracted["policy_number"] = preferred[0] if preferred else numbers[0]
                 return True
         return False
+    
+    
 
     @classmethod
     def _process_vehicle(cls, extracted, text, label):

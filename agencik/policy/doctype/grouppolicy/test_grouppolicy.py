@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestPolisaKomunikacyjna(FrappeTestCase):
+class TestGroupPolicy(FrappeTestCase):
 	pass

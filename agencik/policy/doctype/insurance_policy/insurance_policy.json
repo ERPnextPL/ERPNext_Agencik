@@ -28,10 +28,16 @@
   "calculate_your_commission",
   "home_section",
   "insurance_period",
+  "amended_from",
+  "payment_method",
+  "notes",
+  "cancellation_requested",
+  "email_reminder_status",
+  "sms_reminder_status",
+  "overcommission_mode",
   "send_tab",
   "policy_fille",
-  "communicational_tab",
-  "amended_from"
+  "communicational_tab"
  ],
  "fields": [
   {
@@ -136,7 +142,8 @@
    "fieldname": "user",
    "fieldtype": "Link",
    "label": "User",
-   "options": "User"
+   "options": "User",
+   "read_only": 1
   },
   {
    "fetch_from": "vehicle.brand",
@@ -186,13 +193,48 @@
    "fieldname": "communicational_tab",
    "fieldtype": "Tab Break",
    "label": "Communicational"
+  },
+  {
+   "fieldname": "payment_method",
+   "fieldtype": "Select",
+   "label": "Payment Method",
+   "options": "Cash\nCard\nTransfer\nFinancing"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "default": "0",
+   "fieldname": "cancellation_requested",
+   "fieldtype": "Check",
+   "label": "Cancellation Requested"
+  },
+  {
+   "fieldname": "email_reminder_status",
+   "fieldtype": "Select",
+   "label": "Email Reminder Status",
+   "options": "Pending\nSent\nDisabled"
+  },
+  {
+   "fieldname": "sms_reminder_status",
+   "fieldtype": "Select",
+   "label": "SMS Reminder Status",
+   "options": "Pending\nSent\nDisabled"
+  },
+  {
+   "fieldname": "overcommission_mode",
+   "fieldtype": "Select",
+   "label": "Overcommission Mode",
+   "options": "None\nManual\nAutomatic"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-18 15:04:39.347610",
+ "modified": "2025-11-24 15:34:10.280211",
  "modified_by": "Administrator",
  "module": "Policy",
  "name": "Insurance Policy",

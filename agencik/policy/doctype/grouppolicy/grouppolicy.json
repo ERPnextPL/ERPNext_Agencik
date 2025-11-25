@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-24 09:58:43.856028",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "policy"
+ ],
+ "fields": [
+  {
+   "fieldname": "policy",
+   "fieldtype": "Link",
+   "label": "Policy",
+   "options": "Insurance Policy"
+  },
+  {
+      "fieldname": "group_name",
+      "label": "Group Name",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "member_count",
+      "label": "Member Count",
+      "fieldtype": "Int"
+    },
+    {
+      "fieldname": "notes",
+      "label": "Notes",
+      "fieldtype": "Small Text"
+    }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-24 10:05:12.601686",
+ "modified_by": "Administrator",
+ "module": "Policy",
+ "name": "GroupPolicy",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

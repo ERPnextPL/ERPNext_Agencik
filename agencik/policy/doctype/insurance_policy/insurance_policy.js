@@ -1,5 +1,7 @@
 frappe.ui.form.on("Insurance Policy", {
-
+    validate(frm) {
+        frm.set_value("user", frappe.session.user);
+    },
     // 🔹 Obliczanie prowizji
     calculate_your_commission(frm) {
         calculateCommission(frm);
