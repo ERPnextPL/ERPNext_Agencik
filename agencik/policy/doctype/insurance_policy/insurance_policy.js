@@ -1,5 +1,7 @@
 frappe.ui.form.on("Insurance Policy", {
-
+    validate(frm) {
+        frm.set_value("user", frappe.session.user);
+    },
     // 🔹 Obliczanie prowizji
     calculate_your_commission(frm) {
         calculateCommission(frm);
@@ -12,7 +14,18 @@ frappe.ui.form.on("Insurance Policy", {
     insurance_components_remove(frm) {
         calculateCommission(frm);
     },
+    //translations
+    after_load: function (frm) {
+        // Bez timeout - od razu
+        translate_insurance_fields();
+        translate_tab_breaks();
+    },
 
+    refresh: function (frm) {
+        // Bez timeout
+        translate_insurance_fields();
+        translate_tab_breaks();
+    },
 
 
     // 🔹 Gdy użytkownik doda nowy plik PDF
@@ -207,3 +220,111 @@ function setCoverageEnd(frm) {
     frm.set_value("coverage_end", frappe.datetime.obj_to_str(endDate));
     console.log("📅 coverage_end ustawione na:", frm.doc.coverage_end);
 }
+
+
+
+function translate_insurance_fields() {
+    console.log('Rozpoczynam tłumaczenie pól...');
+
+    // Mapowanie pól do tłumaczeń
+    const field_translations = {
+        'type_policy': 'Typ polisy',
+        'policy_number': 'Numer polisy',
+        'insurance_company': 'Firma ubezpieczeniowa',
+        'coverage_start': 'Data rozpoczęcia',
+        'coverage_end': 'Data zakończenia',
+        'premium_amount': 'Składka',
+        'reminder': 'Przypomnienie',
+        'client': 'Klient',
+        'vehicle': 'Pojazd',
+        'commission_vehicle': 'Prowizja pojazdu',
+        'vehicle_type': 'Typ pojazdu',
+        'policy_fille': 'Plik polisy',
+        'insurance_value': 'Wartość ubezpieczenia',
+        'insurance_components': 'Komponenty ubezpieczenia',
+
+
+
+    };
+
+    // Tłumaczenie każdego pola
+    Object.keys(field_translations).forEach(fieldname => {
+        const field_element = document.querySelector(`[data-fieldname="${fieldname}"] .control-label`);
+        if (field_element) {
+            console.log(`Tłumaczę ${fieldname} na: ${field_translations[fieldname]}`);
+            field_element.textContent = field_translations[fieldname];
+        } else {
+            console.log(`Nie znaleziono pola: ${fieldname}`);
+        }
+    });
+
+    // Specjalna obsługa dla wartości "none" w reminder
+    translate_reminder_value();
+    translate_type_policy_value();
+}
+
+function translate_reminder_value() {
+    // Dla pola edycyjnego
+    const reminder_select = document.querySelector('select[data-fieldname="reminder"]');
+    if (reminder_select) {
+        Array.from(reminder_select.options).forEach(option => {
+            if (option.text === 'none') option.text = 'brak';
+            if (option.text === 'only client') option.text = 'tylko klient';
+            if (option.text === 'Client+Agent') option.text = 'Klient+Agent';
+        });
+    }
+
+    // Dla trybu podglądu
+    const reminder_display = document.querySelector('[data-fieldname="reminder"] .control-value');
+    if (reminder_display && reminder_display.textContent.trim() === 'none') {
+        reminder_display.textContent = 'brak';
+    }
+}
+
+
+function translate_type_policy_value() {
+    // Dla pola edycyjnego
+    const reminder_select = document.querySelector('select[data-fieldname="type_policy"]');
+    if (reminder_select) {
+        Array.from(reminder_select.options).forEach(option => {
+            if (option.text === 'Residental') option.text = 'Mieszkalna';
+            if (option.text === 'Communicational') option.text = 'Komunikacyjna';
+
+        });
+    }
+
+    // Dla trybu podglądu
+    const reminder_display = document.querySelector('[data-fieldname="reminder"] .control-value');
+    if (reminder_display && reminder_display.textContent.trim() === 'none') {
+        reminder_display.textContent = 'brak';
+    }
+}
+
+
+function translate_tab_breaks() {
+    // Tłumaczenia dla zakładek
+    const tab_translations = {
+        'Send': 'Wyślij',
+        'Communicational': 'Komunikacyjna',
+        'Residental': 'Mieszkalna',
+    };
+
+    // Znajdź wszystkie zakładki
+    const tab_links = document.querySelectorAll('.nav-link, .form-tabs .nav-item a');
+    tab_links.forEach(tab => {
+        const original_text = tab.textContent.trim();
+        if (tab_translations[original_text]) {
+            tab.textContent = tab_translations[original_text];
+        }
+    });
+
+    // Tłumaczenie tytułów sekcji
+    const section_headers = document.querySelectorAll('.section-head, .form-section .section-head');
+    section_headers.forEach(header => {
+        const original_text = header.textContent.trim();
+        if (tab_translations[original_text]) {
+            header.textContent = tab_translations[original_text];
+        }
+    });
+}
+

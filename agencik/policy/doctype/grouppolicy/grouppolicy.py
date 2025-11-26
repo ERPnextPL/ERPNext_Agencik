@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class PolisaKomunikacyjna(Document):
+class GroupPolicy(Document):
 	pass

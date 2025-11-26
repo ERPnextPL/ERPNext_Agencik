@@ -6,11 +6,15 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "plate_no",
   "brand",
   "model",
+  "vehicle_type",
   "year",
-  "plate_no",
-  "vin"
+  "registration_number",
+  "vin",
+  "technical_review_on",
+  "first_registration_on"
  ],
  "fields": [
   {
@@ -33,8 +37,7 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Year",
-   "non_negative": 1,
-   "reqd": 1
+   "non_negative": 1
   },
   {
    "description": "registration number",
@@ -48,6 +51,26 @@
    "fieldname": "vin",
    "fieldtype": "Data",
    "label": "VIN"
+  },
+  {
+   "fieldname": "vehicle_type",
+   "fieldtype": "Data",
+   "label": "Vehicle Type"
+  },
+  {
+   "fieldname": "registration_number",
+   "fieldtype": "Data",
+   "label": "Registration Number"
+  },
+  {
+   "fieldname": "technical_review_on",
+   "fieldtype": "Date",
+   "label": "Technical Review On"
+  },
+  {
+   "fieldname": "first_registration_on",
+   "fieldtype": "Date",
+   "label": "First Registration On"
   }
  ],
  "grid_page_length": 50,
@@ -58,7 +81,7 @@
    "link_fieldname": "owner"
   }
  ],
- "modified": "2025-10-17 09:19:39.189853",
+ "modified": "2025-11-24 12:51:28.514917",
  "modified_by": "Administrator",
  "module": "Policy",
  "name": "Vehicle Insurance",

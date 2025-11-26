@@ -21,7 +21,8 @@ doc_events = {
         "validate": "agencik.overrides.sales_person_controller.validate_item"
     },
     "Insurance Policy": {
-        "validate": "agencik.overrides.walidation_company_number.length_company",
+        # "validate": "agencik.overrides.walidation_company_number.length_company",
+        "validate": "agencik.policy.doctype.insurance_policy.insurance_policy_controller.length_company",
         # "after_insert": "agencik.policy.doctype.insurance_policy.insurance_policy.after_insert",
         # "on_update": "agencik.policy.doctype.insurance_policy.insurance_policy.on_update",
         # "on_trash": "agencik.policy.idoctype.nsurance_policy.policy_ocr.on_policy_trash",

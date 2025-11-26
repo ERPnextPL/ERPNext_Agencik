@@ -80,27 +80,3 @@ class InsurancePolicy(Document):
 
 
  
-
-    # def length_company(doc, method):
-    #     # Debug: sprawdź czy funkcja jest wywoływana
-    #     frappe.logger().debug(f"Validating policy number for company: {doc.insurance_company}")
-        
-    #     # Sprawdź czy mamy potrzebne dane
-    #     if not doc.insurance_company or not doc.policy_number:
-    #         return
-        
-    #     company = doc.insurance_company.strip()
-    #     policy_number = str(doc.policy_number).strip()
-        
-    #     if company == "Allianz":
-    #         if len(policy_number) != 10:
-    #             frappe.throw(_("For Allianz policy number must be exactly 10 characters long. Current length: {}").format(len(policy_number)))
-        
-    #     elif company == "Warta":
-    #         if len(policy_number) != 15:
-    #             frappe.throw(_("For Warta policy number must be exactly 15 characters long. Current length: {}").format(len(policy_number)))
-        
-    #     elif company == "Proama":
-    #         if len(policy_number) != 11:
-    #             frappe.throw(_("For Proama policy number must be exactly 11 characters long. Current length: {}").format(len(policy_number)))
-

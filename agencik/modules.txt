@@ -1,3 +1,2 @@
 Agencik
-Object
 Policy
