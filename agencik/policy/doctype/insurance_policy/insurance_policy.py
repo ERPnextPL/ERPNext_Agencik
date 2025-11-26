@@ -73,6 +73,7 @@ class InsurancePolicy(Document):
             "commission": self.commission_vehicle,
             "components_count": len(self.insurance_components) if self.insurance_components else 0
         }
+    
 
 
 

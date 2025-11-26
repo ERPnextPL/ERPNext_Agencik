@@ -62,6 +62,7 @@ class TextParser:
             "pzu", "warta", "allianz", "generali", "link4", "axa", "uniqa", "compensa", "mtu"
         ],
         "coverage_start": [],
+        # "coverage_end": [],
         "client": [
             "ubezpieczajacy", "klient", "nabywca", "ubezpieczony",
             "leasingobiorca", "dane klienta", "leasing", "spółka z ograniczoną odpowiedzialnością"
